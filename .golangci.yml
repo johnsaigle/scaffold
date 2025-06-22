@@ -16,6 +16,7 @@ linters:
     # Enum and maps used on switch statements are exhaustive
     - exhaustive
     - exhaustruct
+    - forbidigo
     - forcetypeassert
     - gocritic
     - gosec
@@ -24,6 +25,7 @@ linters:
     - loggercheck
     # Check for simple misspellings of words. 
     - misspell
+    - mnd
     - noctx
     # Require explanations for nolint comments
     - nolintlint
@@ -108,6 +110,11 @@ linters:
         - .+/cobra\.Command$
         - .+/http\.Client$
         - .+/prometheus.+
+    forbidigo:
+      forbid:
+        - pattern: ^io\.ReadAll$
+          msg: Use of io.ReadAll is forbidden. Consider using alternative approaches like io.LimitReader or streaming.
+      analyze-types: true
     gocritic:
       disable-all: true
     # disabled-checks:
@@ -141,6 +148,36 @@ linters:
         - weakCond
       # performance lints
         - indexAlloc
+    mnd:
+      # List of enabled checks, see https://github.com/tommy-muehle/go-mnd/#checks for description.
+      # Default: ["argument", "case", "condition", "operation", "return", "assign"]
+      checks:
+        - argument
+        - case
+        - condition
+        - operation
+        - return
+        - assign
+      # List of numbers to exclude from analysis.
+      # The numbers should be written as string.
+      # Values always ignored: "1", "1.0", "0" and "0.0".
+      # Default: []
+      # ignored-numbers:
+      #   - '0666'
+      #   - '0755'
+      # List of file patterns to exclude from analysis.
+      # Values always ignored: `.+_test.go`.
+      # Default: []
+      # ignored-files:
+      #   - 'magic1_.+\.go$'
+      # List of function patterns to exclude from analysis.
+      # Following functions are always ignored: `time.Date`,
+      # `strconv.FormatInt`, `strconv.FormatUint`, `strconv.FormatFloat`,
+      # `strconv.ParseInt`, `strconv.ParseUint`, `strconv.ParseFloat`.
+      # Default: []
+      ignored-functions:
+        - '^math\.'
+        - '^http\.StatusText$'
     nolintlint:
       # Disable to ensure that all nolint directives actually have an effect.
       # Default: false
