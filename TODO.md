@@ -1,0 +1,2 @@
+- Add clippy rules
+- Add example Makefiles
