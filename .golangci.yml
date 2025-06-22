@@ -103,6 +103,11 @@ linters:
       check:
         - switch
         - map
+    exhaustruct:
+      exclude:
+        - .+/cobra\.Command$
+        - .+/http\.Client$
+        - .+/prometheus.+
     gocritic:
       disable-all: true
     # disabled-checks:
