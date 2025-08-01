@@ -1,11 +1,5 @@
 # AGENTS.md - OpenCode Project Configuration
 
-## Opencode AGENTS instructions
-If the `/init` command was invoked and you arrived here,
-use the current file contents. You can only remove
-content from this file that is not relevant for the project,
-e.g. the Python guidance can be removed if there is no Python code.
-
 ## Project Overview
 This file contains essential configuration and commands for opencode to work effectively with this codebase. It serves as a reference for automated agents and human developers.
 
@@ -17,83 +11,6 @@ This project follows ultra-secure coding practices with bounded resource managem
 - **Resource Bounds**: Pre-allocated collections with fixed capacity, explicit bounds on all operations
 - **Banned Patterns**: Unbounded recursion, global mutable state, unbounded loops, dynamic dispatch in hot paths
 - **Input Validation**: Multi-layer validation (type → format → business → security)
-
-## Build & Development Commands
-
-### Go Projects
-```bash
-# Lint and security check
-golangci-lint run
-
-# Build
-go build ./...
-
-# Test with coverage
-go test -v -race -coverprofile=coverage.out ./...
-
-# Security scan
-gosec ./...
-
-# Dependency check
-go mod verify && go mod tidy
-```
-
-### Node.js/TypeScript Projects
-```bash
-# Install dependencies
-npm ci
-
-# Lint
-npm run lint
-
-# Type check
-npm run typecheck
-
-# Test
-npm test
-
-# Build
-npm run build
-
-# Security audit
-npm audit --audit-level=moderate
-```
-
-### Python Projects
-```bash
-# Install dependencies
-pip install -r requirements.txt
-
-# Lint and format
-ruff check . && ruff format .
-
-# Type check
-mypy .
-
-# Test
-pytest --cov=. --cov-report=term-missing
-
-# Security scan
-bandit -r .
-```
-
-### Rust Projects
-```bash
-# Check
-cargo check
-
-# Lint
-cargo clippy -- -D warnings
-
-# Test
-cargo test
-
-# Build
-cargo build --release
-
-# Security audit
-cargo audit
-```
 
 ## Code Quality Standards
 
@@ -141,21 +58,6 @@ function functionName(params: ExplicitTypes): ReturnType {
 3. **Property-Based Tests**: Verify invariants hold for all valid inputs
 4. **Security Tests**: Test input validation and error handling
 
-### Test Commands by Language
-```bash
-# Go
-go test -v -race ./...
-
-# Node.js
-npm test
-
-# Python
-pytest -v --cov=.
-
-# Rust
-cargo test
-```
-
 ## Dependency Management
 
 ### Approved Dependencies
@@ -163,24 +65,7 @@ cargo test
 - Use well-maintained, security-audited packages
 - Avoid packages with known vulnerabilities
 
-### Dependency Commands
-```bash
-# Go
-go mod tidy && go mod verify
-
-# Node.js
-npm audit fix
-
-# Python
-pip-audit
-
-# Rust
-cargo audit
-```
-
-## Pre-commit Hooks
-
-### Required Checks
+## Required Checks
 - [ ] Linting passes
 - [ ] Type checking passes
 - [ ] Tests pass
@@ -189,17 +74,6 @@ cargo audit
 - [ ] Documentation updated
 
 ## Environment Configuration
-
-### Required Environment Variables
-```bash
-# Development
-NODE_ENV=development
-LOG_LEVEL=debug
-
-# Production
-NODE_ENV=production
-LOG_LEVEL=info
-```
 
 ### Secret Management
 - Use environment variables for secrets
@@ -234,53 +108,24 @@ LOG_LEVEL=info
 - Track security events
 - Monitor performance
 
-## Deployment
-
-### Security Checklist
-- [ ] All secrets in environment variables
-- [ ] HTTPS enabled
-- [ ] Security headers configured
-- [ ] Input validation enabled
-- [ ] Rate limiting configured
-- [ ] Monitoring enabled
-
-### Deployment Commands
-```bash
-# Build for production
-npm run build:prod
-
-# Deploy (example)
-docker build -t app:latest .
-docker run -p 3000:3000 app:latest
-```
-
 ## Emergency Procedures
 
 ### Security Incident Response
 1. **Immediate containment**: Disable affected components
 2. **Safe mode fallback**: Minimal functionality continues
 3. **Clear error reporting**: Machine-readable error codes
-4. **Recovery procedures**: Automated restart with clean state
-
-### Rollback Procedures
-```bash
-# Git rollback
-git revert <commit-hash>
-
-# Container rollback
-docker rollback <service-name>
-```
 
 ## Agent Instructions
 
 ### For OpenCode Agents
 1. Always run linting and type checking before committing
-2. Validate all inputs at function boundaries
-3. Use explicit error handling patterns
-4. Implement resource bounds on all operations
-5. Follow the security constraints defined above
-6. Run tests after making changes
-7. Update documentation when changing APIs
+2. Always ask before committing
+3. Validate all inputs at function boundaries
+4. Use explicit error handling patterns
+5. Implement resource bounds on all operations
+6. Follow the security constraints defined above
+7. Run tests after making changes
+8. Update documentation when changing APIs
 
 ### Code Review Checklist
 - [ ] All functions ≤60 lines
