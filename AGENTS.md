@@ -5,7 +5,7 @@ This file contains essential configuration and commands for opencode to work eff
 
 ## Critical: The tools that you have access to
 
-- fabric -- an AI-powered multipurpose tool. Details are in `FABRIC.md`
+- `fabric` -- an AI-powered multipurpose tool. Details are in `FABRIC.md`
     - Use like a bash command: send relevant input from STDIN to the command
         - e.g. `curl example.com/article | analyze_prose_json`
 - `subagents/` -- specific AI agents that can be used to perform specialized tasks.
