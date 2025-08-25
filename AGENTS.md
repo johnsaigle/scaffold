@@ -20,4 +20,4 @@ Use specialized agents for domain-specific tasks:
 - **security-auditor** (`.opencode/agent/security-auditor.md`): Performs security audits, focuses on logic bugs, DoS vulnerabilities, input validation, and blockchain security. Use when code needs security review.
 - **code-quality** (`.opencode/agent/code-quality.md`): Enforces ultra-secure coding practices with bounded resource management. Use when implementing or reviewing code for quality and security standards.
 - **content-writer** (`.opencode/agent/content-writer.md`): Creates content with clear, high-energy prose. Use when writing blog posts.
-- **style-editor** (`.opencode/agent/style-editor.md`): Improve existing writing style
+- **style-editor** (`.opencode/agent/style-editor.md`): Edit for style, especially for blog posts
