@@ -1,4 +1,4 @@
-command:description
+pattern:description
 
 agility_story:Generate agile user stories and acceptance criteria following agile formats.
 ai:Provide concise, insightful answers in brief bullets focused on core concepts.
