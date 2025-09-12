@@ -9,6 +9,4 @@ if [ ! -d "$DESTINATION" ]; then
   exit 1
 fi
 
-cp -r .opencode/ "$DESTINATION"
 cp AGENTS.md "$DESTINATION"
-cp FABRIC.md "$DESTINATION"
