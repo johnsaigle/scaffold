@@ -1,0 +1,22 @@
+[package]
+version = "0.0.1"
+edition = "2024"
+
+[profile.dev]
+overflow-checks = true
+lto = "fat"
+
+[profile.release]
+overflow-checks = true
+lto = "fat"
+opt-level = 3
+strip = "debuginfo"
+incremental = true
+
+[lints.clippy]
+complexity = "warn"
+correctness = "warn"
+nursery = "warn"
+pedantic = "warn"
+perf = "warn"
+suspicious = "warn"
