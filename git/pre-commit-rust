@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+# Rust pre-commit hook
+cargo clippy
+cargo t
