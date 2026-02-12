@@ -7,16 +7,22 @@ on:
     branches: [ main, master ]
   workflow_dispatch:
 
+permissions: {}
+
 jobs:
   test:
     runs-on: ubuntu-latest
     name: Run unit tests
+    permissions:
+      contents: read
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          persist-credentials: false
 
       - name: Setup Rust
-        uses: actions-rust-lang/setup-rust-toolchain@v1
+        uses: actions-rust-lang/setup-rust-toolchain@f3c7ee09d8bd0d3479e6fd3e0f9e68c297e7c6af # v1.12.0
         with:
           toolchain: stable
 
@@ -26,15 +32,45 @@ jobs:
   clippy:
     runs-on: ubuntu-latest
     name: Run clippy
+    permissions:
+      contents: read
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          persist-credentials: false
 
       - name: Setup Rust
-        uses: actions-rust-lang/setup-rust-toolchain@v1
+        uses: actions-rust-lang/setup-rust-toolchain@f3c7ee09d8bd0d3479e6fd3e0f9e68c297e7c6af # v1.12.0
         with:
           toolchain: stable
           components: clippy
 
       - name: Run clippy
         run: cargo clippy -- -D warnings
+
+  build:
+    runs-on: ubuntu-latest
+    name: Build release binary
+    permissions:
+      contents: read
+      actions: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          persist-credentials: false
+
+      - name: Setup Rust
+        uses: actions-rust-lang/setup-rust-toolchain@f3c7ee09d8bd0d3479e6fd3e0f9e68c297e7c6af # v1.12.0
+        with:
+          toolchain: stable
+
+      - name: Build release binary
+        run: cargo build --release
+
+      - name: Upload binary artifact
+        uses: actions/upload-artifact@65c4c4a1ddee5b72f698aed1957271471d8dd3e9 # v4.6.0
+        with:
+          name: ${{ github.event.repository.name }}
+          path: target/release/${{ github.event.repository.name }}
