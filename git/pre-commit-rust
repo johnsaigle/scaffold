@@ -2,3 +2,5 @@
 # Rust pre-commit hook
 cargo clippy
 cargo t
+# check CI
+zizmor .
