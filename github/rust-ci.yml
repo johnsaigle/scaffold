@@ -22,7 +22,7 @@ jobs:
           persist-credentials: false
 
       - name: Setup Rust
-        uses: actions-rust-lang/setup-rust-toolchain@f3c7ee09d8bd0d3479e6fd3e0f9e68c297e7c6af # v1.12.0
+        uses: actions-rust-lang/setup-rust-toolchain@9d7e65c320fdb52dcd45ffaa68deb6c02c8754d9 # v1.12.0
         with:
           toolchain: stable
 
@@ -41,7 +41,7 @@ jobs:
           persist-credentials: false
 
       - name: Setup Rust
-        uses: actions-rust-lang/setup-rust-toolchain@f3c7ee09d8bd0d3479e6fd3e0f9e68c297e7c6af # v1.12.0
+        uses: actions-rust-lang/setup-rust-toolchain@9d7e65c320fdb52dcd45ffaa68deb6c02c8754d9 # v1.12.0
         with:
           toolchain: stable
           components: clippy
@@ -62,7 +62,7 @@ jobs:
           persist-credentials: false
 
       - name: Setup Rust
-        uses: actions-rust-lang/setup-rust-toolchain@f3c7ee09d8bd0d3479e6fd3e0f9e68c297e7c6af # v1.12.0
+        uses: actions-rust-lang/setup-rust-toolchain@9d7e65c320fdb52dcd45ffaa68deb6c02c8754d9 # v1.12.0
         with:
           toolchain: stable
 
@@ -70,7 +70,7 @@ jobs:
         run: cargo build --release
 
       - name: Upload binary artifact
-        uses: actions/upload-artifact@65c4c4a1ddee5b72f698aed1957271471d8dd3e9 # v4.6.0
+        uses: actions/upload-artifact@65c4c4a1ddee5b72f698fdd19549f0f0fb45cf08 # v4.6.0
         with:
           name: ${{ github.event.repository.name }}
           path: target/release/${{ github.event.repository.name }}
