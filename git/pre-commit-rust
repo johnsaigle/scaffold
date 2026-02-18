@@ -2,5 +2,6 @@
 # Rust pre-commit hook
 cargo clippy
 cargo t
+cargo +nightly udeps
 # check CI
 zizmor .
