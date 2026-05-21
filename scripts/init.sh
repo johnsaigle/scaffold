@@ -148,6 +148,8 @@ setup_rust() {
   echo "Setting up Rust project in $DEST ..."
   cat_append "Cargo.toml" "Cargo.toml"
   copy_file "github/rust-ci.yml" ".github/workflows/ci.yml"
+  copy_file "github/rust-build.yml" ".github/workflows/build.yml"
+  copy_file "github/rust-zizmor.yml" ".github/workflows/zizmor.yml"
   install_hook "git/pre-commit-rust"
   append_file "git/exclude" ".git/info/exclude"
   echo "Done."
