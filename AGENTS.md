@@ -11,7 +11,8 @@ This repository provides opinionated scaffolding for Rust and Go projects.
 ├── .golangci.yml           # Go linter configuration template
 ├── github/rust-ci.yml      # GitHub Actions CI template for Rust
 ├── github/rust-build.yml   # GitHub Actions build template for Rust
-├── github/rust-zizmor.yml  # GitHub Actions zizmor audit template for Rust
+├── github/rust-release.yml # GitHub Actions release template for Rust
+├── github/zizmor.yml       # GitHub Actions zizmor audit template
 ├── git/pre-commit-rust     # Pre-commit hook for Rust projects
 └── git/exclude             # Git exclude patterns
 ```
@@ -166,6 +167,7 @@ zizmor .
 Scaffolded Rust projects include:
 - `ci.yml`: test (`cargo test --verbose`) and clippy (`cargo clippy -- -D warnings`)
 - `build.yml`: `cargo build --release` + artifact upload
+- `release.yml`: auto-release on push to main when `Cargo.toml` version changes
 - `zizmor.yml`: CI security audit with zizmor
 
 ## Security
