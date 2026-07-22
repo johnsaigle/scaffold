@@ -149,7 +149,7 @@ setup_rust() {
   cat_append "Cargo.toml" "Cargo.toml"
   copy_file "github/rust-ci.yml" ".github/workflows/ci.yml"
   copy_file "github/rust-build.yml" ".github/workflows/build.yml"
-  copy_file "github/zizmor.yml" ".github/workflows/zizmor.yml"
+  copy_file "github/zizmor-ci.yml" ".github/workflows/zizmor-ci.yml"
   copy_file "github/rust-release.yml" ".github/workflows/release.yml"
   install_hook "git/pre-commit-rust"
   append_file "git/exclude" ".git/info/exclude"

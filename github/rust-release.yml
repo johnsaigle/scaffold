@@ -45,7 +45,7 @@ jobs:
 
       - name: Build release binary
         if: steps.check_tag.outputs.exists == 'false'
-        run: cargo build --release --verbose
+        run: cargo build --release --locked --verbose
 
       - name: Prepare binary
         if: steps.check_tag.outputs.exists == 'false'
