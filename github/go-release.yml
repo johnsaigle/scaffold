@@ -1,0 +1,78 @@
+name: Release
+
+on:
+  push:
+    branches: [main]
+    paths: ['go.mod']
+  workflow_dispatch:
+
+jobs:
+  build-and-release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          fetch-tags: true
+          persist-credentials: false
+
+      - name: Get version
+        id: version
+        run: |
+          VERSION=$(go list -m -f '{{.Version}}' 2>/dev/null || true)
+          if [[ -z "$VERSION" ]]; then
+            # No module version (e.g. local development); fall back to the latest git tag.
+            VERSION="$(git describe --tags --abbrev=0 2>/dev/null || echo '')"
+          fi
+          if [[ -z "$VERSION" ]]; then
+            echo "No version found in go.mod or git tags; skipping release."
+            echo "exists=true" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          # Normalize: strip a leading 'v' for the tag, keep it as-is otherwise.
+          if [[ "$VERSION" == v* ]]; then
+            TAG="$VERSION"
+          else
+            TAG="v$VERSION"
+          fi
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+          echo "tag=$TAG" >> "$GITHUB_OUTPUT"
+
+      - name: Check if tag exists
+        id: check_tag
+        env:
+          TAG: ${{ steps.version.outputs.tag }}
+        run: |
+          if git rev-parse "$TAG" >/dev/null 2>&1; then
+            echo "exists=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "exists=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Setup Go
+        if: steps.check_tag.outputs.exists == 'false'
+        uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
+        with:
+          go-version-file: go.mod
+
+      - name: Build release binary
+        if: steps.check_tag.outputs.exists == 'false'
+        run: |
+          BINARY="${{ github.event.repository.name }}"
+          mkdir -p dist
+          go build -o "dist/$BINARY" ./...
+
+      - name: Prepare binary
+        if: steps.check_tag.outputs.exists == 'false'
+        run: |
+          chmod +x dist/${{ github.event.repository.name }}
+          mv dist/${{ github.event.repository.name }} dist/${{ github.event.repository.name }}-linux-x64
+
+      - name: Create Release
+        if: steps.check_tag.outputs.exists == 'false'
+        run: gh release create "$TAG" dist/${{ github.event.repository.name }}-linux-x64 --generate-notes --latest
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ steps.version.outputs.tag }}

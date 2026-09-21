@@ -159,6 +159,10 @@ setup_rust() {
 setup_go() {
   echo "Setting up Go project in $DEST ..."
   copy_file ".golangci.yml" ".golangci.yml"
+  copy_file "github/go-ci.yml" ".github/workflows/ci.yml"
+  copy_file "github/go-build.yml" ".github/workflows/build.yml"
+  copy_file "github/zizmor-ci.yml" ".github/workflows/zizmor-ci.yml"
+  copy_file "github/go-release.yml" ".github/workflows/release.yml"
   append_file "git/exclude" ".git/info/exclude"
   echo "Done."
 }
