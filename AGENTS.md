@@ -90,6 +90,7 @@ go fmt ./...
 
 **Clippy Lints (all enabled as warn):**
 - `complexity`, `correctness`, `nursery`, `pedantic`, `perf`, `suspicious`
+- `allow_attributes_without_reason` (restriction): every `#[allow(...)]` must carry `reason = "..."`; prefer `#[expect(..., reason = "...")]` over bare `allow`
 - Run clippy before commits: `cargo clippy -- -D warnings`
 
 **Formatting:**
