@@ -9,6 +9,8 @@ on:
 jobs:
   build-and-release:
     runs-on: ubuntu-latest
+    env:
+      BINARY: ${{ github.event.repository.name }}
     permissions:
       contents: write
     steps:
@@ -60,19 +62,18 @@ jobs:
       - name: Build release binary
         if: steps.check_tag.outputs.exists == 'false'
         run: |
-          BINARY="${{ github.event.repository.name }}"
           mkdir -p dist
           go build -o "dist/$BINARY" ./...
 
       - name: Prepare binary
         if: steps.check_tag.outputs.exists == 'false'
         run: |
-          chmod +x dist/${{ github.event.repository.name }}
-          mv dist/${{ github.event.repository.name }} dist/${{ github.event.repository.name }}-linux-x64
+          chmod +x dist/$BINARY
+          mv dist/$BINARY dist/$BINARY-linux-x64
 
       - name: Create Release
         if: steps.check_tag.outputs.exists == 'false'
-        run: gh release create "$TAG" dist/${{ github.event.repository.name }}-linux-x64 --generate-notes --latest
+        run: gh release create "$TAG" dist/$BINARY-linux-x64 --generate-notes --latest
         env:
           GH_TOKEN: ${{ github.token }}
           TAG: ${{ steps.version.outputs.tag }}

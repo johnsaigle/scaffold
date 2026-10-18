@@ -104,7 +104,7 @@ linters:
     # Default: [ switch ]
       check:
         - switch
-        - map
+        - mapliteral
     exhaustruct:
       exclude:
         - .+/cobra\.Command$

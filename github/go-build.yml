@@ -8,6 +8,8 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    env:
+      BINARY: ${{ github.event.repository.name }}
     permissions:
       contents: read
       actions: write
@@ -24,7 +26,6 @@ jobs:
 
       - name: Build release binary
         run: |
-          BINARY="${{ github.event.repository.name }}"
           mkdir -p dist
           go build -o "dist/$BINARY" ./...
 
