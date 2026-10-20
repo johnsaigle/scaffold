@@ -9,6 +9,7 @@ This repository provides opinionated scaffolding for Rust and Go projects.
 ├── scripts/init.sh          # Main scaffold script (entry point)
 ├── Cargo.toml               # Rust project template
 ├── .golangci.yml           # Go linter configuration template
+├── go.mod.template         # Go module template for projects without a go.mod
 ├── github/rust-ci.yml      # GitHub Actions CI template for Rust
 ├── github/rust-build.yml   # GitHub Actions build template for Rust
 ├── github/rust-release.yml # GitHub Actions release template for Rust

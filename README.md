@@ -20,6 +20,7 @@ The script is idempotent: existing files are skipped, and shared ignore patterns
 - `docker/` contains optional Dockerfile templates.
 - `Cargo.toml` contains Rust Cargo profile and lint settings appended to target projects.
 - `.golangci.yml` contains the Go linter configuration copied to target projects.
+- `go.mod.template` is copied as `go.mod` when the target project has none; it tracks the latest stable Go release.
 
 This repository should not contain `.github/workflows` copies of the Rust project templates; those workflows are meant to run in generated projects, not in the scaffold repository itself.
 
@@ -39,4 +40,5 @@ Rust CI/build/release templates use `--locked` so generated projects build again
 The Go scaffold adds:
 
 - `.golangci.yml`.
+- `go.mod` pinned to the latest stable Go (only when the project has none).
 - Shared git exclude patterns.

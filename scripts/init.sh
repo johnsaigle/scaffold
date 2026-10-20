@@ -158,7 +158,11 @@ setup_rust() {
 
 setup_go() {
   echo "Setting up Go project in $DEST ..."
+
   copy_file ".golangci.yml" ".golangci.yml"
+
+  # Only when the project has no go.mod yet; an existing file is never touched.
+  copy_file "go.mod.template" "go.mod"
   copy_file "github/go-ci.yml" ".github/workflows/ci.yml"
   copy_file "github/go-build.yml" ".github/workflows/build.yml"
   copy_file "github/zizmor-ci.yml" ".github/workflows/zizmor-ci.yml"

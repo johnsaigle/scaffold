@@ -1,0 +1,5 @@
+// Go module template. Copied only when the target project has no go.mod.
+// Replace the module path before committing.
+module example.com/replace-me
+
+go 1.27.3
