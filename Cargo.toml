@@ -1,6 +1,7 @@
 [profile.dev]
 overflow-checks = true
-lto = "fat"
+# Line tables are enough for backtraces; full debuginfo for C and async dependencies dominated target/.
+debug = "line-tables-only"
 
 [profile.release]
 overflow-checks = true

@@ -85,7 +85,7 @@ go fmt ./...
 ### Rust Projects
 
 **Profiles (from Cargo.toml):**
-- Debug: `overflow-checks = true`, `lto = "fat"`
+- Debug: `overflow-checks = true`, `debug = "line-tables-only"`
 - Release: `overflow-checks = true`, `lto = "fat"`, `opt-level = 3`
 - Always strip debuginfo in release
 
