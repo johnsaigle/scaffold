@@ -1,0 +1,2 @@
+# Agent harness runtime artifacts (logs, node_modules, session state)
+.opencode/
