@@ -101,10 +101,19 @@ linters:
       errorf: false
     exhaustive:
     # Program elements to check for exhaustiveness.
+    # Supported values: switch, mapliteral, typeswitch.
     # Default: [ switch ]
       check:
         - switch
         - mapliteral
+        - typeswitch
+    # A default case does NOT excuse missing enum members.
+    # Default: false
+      default-signifies-exhaustive: false
+    # Require an explicit default case even when all enum members are
+    # listed, so new members added later are still flagged.
+    # Default: false
+      default-case-required: true
     exhaustruct:
       exclude:
         - .+/cobra\.Command$
