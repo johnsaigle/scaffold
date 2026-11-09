@@ -11,7 +11,7 @@ Run the scaffold script from this repository and point it at an existing project
 ./scripts/init.sh go /path/to/project
 ```
 
-The script is idempotent: existing files are skipped, and shared ignore patterns are appended only when missing.
+The script is idempotent: existing files are skipped, Cargo.toml tables (`[profile.*]`, `[lints.clippy]`) are appended only when the project does not already define them, and shared ignore patterns are appended only when missing. Git worktrees and submodules are supported.
 
 ## Templates
 
