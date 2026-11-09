@@ -50,7 +50,8 @@ copy_file() {
 # Usage: append_file <src_relative_to_scaffold_root> <dst_relative_to_dest>
 append_file() {
   local src="$SCAFFOLD_ROOT/$1"
-  local dst="$DEST/$2"
+  local dst="$2"
+  [[ "$dst" = /* ]] || dst="$DEST/$dst"
 
   if [[ ! -f "$src" ]]; then
     echo "  WARN: source file not found: $src"
@@ -79,13 +80,14 @@ append_file() {
   fi
 }
 
-# Append an entire file's contents to a destination file.
-# Uses a marker comment to detect prior runs and stay idempotent.
-# Usage: cat_append <src_relative_to_scaffold_root> <dst_relative_to_dest> [marker]
-cat_append() {
+# Append a TOML file's tables to a destination TOML file, skipping any table
+# the destination already defines (TOML forbids duplicate tables, so blindly
+# appending would break an existing Cargo.toml). Skipped tables are reported
+# so they can be merged by hand.
+# Usage: append_toml_tables <src_relative_to_scaffold_root> <dst_relative_to_dest>
+append_toml_tables() {
   local src="$SCAFFOLD_ROOT/$1"
   local dst="$DEST/$2"
-  local marker="${3:-# --- scaffold ---}"
 
   if [[ ! -f "$src" ]]; then
     echo "  WARN: source file not found: $src"
@@ -97,25 +99,58 @@ cat_append() {
     return
   fi
 
-  if grep -qF -- "$marker" "$dst" 2>/dev/null; then
-    echo "  SKIP (already appended): $2"
-  else
-    printf '\n%s\n' "$marker" >> "$dst"
-    cat "$src" >> "$dst"
-    echo "  APPEND: $2"
+  local header="" chunk="" added=0 skipped=()
+  flush() {
+    [[ -z "$header" ]] && return
+    if grep -qxF -- "$header" "$dst"; then
+      skipped+=("$header")
+    else
+      printf '\n%s' "$chunk" >> "$dst"
+      added=$((added + 1))
+    fi
+  }
+  while IFS= read -r line || [[ -n "$line" ]]; do
+    if [[ "$line" =~ ^\[[^]]+\]$ ]]; then
+      flush
+      header="$line"
+      chunk="$line"$'\n'
+    elif [[ -n "$header" ]]; then
+      chunk+="$line"$'\n'
+    fi
+  done < "$src"
+  flush
+
+  if ((added > 0)); then
+    echo "  APPEND ($added tables): $2"
   fi
+  for h in "${skipped[@]}"; do
+    echo "  SKIP (table already defined; diff against scaffold's $1 if needed): $2 $h"
+  done
+}
+
+# Resolve a path inside the destination's git directory. Works for worktrees
+# and submodules, where .git is a file rather than a directory.
+# Usage: git_path <path-relative-to-git-dir>
+git_path() {
+  git -C "$DEST" rev-parse --path-format=absolute --git-path "$1" 2>/dev/null
+}
+
+is_git_repo() {
+  git -C "$DEST" rev-parse --git-dir >/dev/null 2>&1
 }
 
 # Install a git pre-commit hook. Appends to existing hook if present.
 install_hook() {
   local src="$SCAFFOLD_ROOT/$1"
-  local hook_dir="$DEST/.git/hooks"
-  local hook_file="$hook_dir/pre-commit"
 
-  if [[ ! -d "$DEST/.git" ]]; then
+  if ! is_git_repo; then
     echo "  SKIP (not a git repo): pre-commit hook"
     return
   fi
+
+  local hook_dir
+  hook_dir="$(git_path hooks)"
+  local hook_file="$hook_dir/pre-commit"
 
   if [[ ! -f "$src" ]]; then
     echo "  WARN: hook source not found: $src"
@@ -142,17 +177,25 @@ install_hook() {
   fi
 }
 
+append_git_exclude() {
+  if is_git_repo; then
+    append_file "git/exclude" "$(git_path info/exclude)"
+  else
+    echo "  SKIP (not a git repo): git exclude"
+  fi
+}
+
 # --- project types ---------------------------------------------------------
 
 setup_rust() {
   echo "Setting up Rust project in $DEST ..."
-  cat_append "Cargo.toml" "Cargo.toml"
+  append_toml_tables "Cargo.toml" "Cargo.toml"
   copy_file "github/rust-ci.yml" ".github/workflows/ci.yml"
   copy_file "github/rust-build.yml" ".github/workflows/build.yml"
   copy_file "github/zizmor-ci.yml" ".github/workflows/zizmor-ci.yml"
   copy_file "github/rust-release.yml" ".github/workflows/release.yml"
   install_hook "git/pre-commit-rust"
-  append_file "git/exclude" ".git/info/exclude"
+  append_git_exclude
   echo "Done."
 }
 
@@ -167,7 +210,7 @@ setup_go() {
   copy_file "github/go-build.yml" ".github/workflows/build.yml"
   copy_file "github/zizmor-ci.yml" ".github/workflows/zizmor-ci.yml"
   copy_file "github/go-release.yml" ".github/workflows/release.yml"
-  append_file "git/exclude" ".git/info/exclude"
+  append_git_exclude
   echo "Done."
 }
 
