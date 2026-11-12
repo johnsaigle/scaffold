@@ -1,0 +1,31 @@
+# Example Makefile for a Go project.
+# Phony targets wrapping common go tooling workflows.
+
+GO ?= go
+BINARY_NAME ?= app
+
+.PHONY: help build test test-race fmt lint vet clean
+
+help: ## Show available targets
+	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "  %-14s %s\n", $$1, $$2}'
+
+build: ## Build the binary
+	$(GO) build -o $(BINARY_NAME) ./...
+
+test: ## Run all tests
+	$(GO) test ./...
+
+test-race: ## Run all tests with the race detector
+	$(GO) test -race ./...
+
+fmt: ## Format all code
+	$(GO) fmt ./...
+
+lint: ## Lint with golangci-lint
+	golangci-lint run
+
+vet: ## Run go vet
+	$(GO) vet ./...
+
+clean: ## Remove build artifacts
+	rm -f $(BINARY_NAME)

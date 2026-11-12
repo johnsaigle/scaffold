@@ -157,6 +157,7 @@ install_hook() {
 setup_rust() {
   echo "Setting up Rust project in $DEST ..."
   cat_append "Cargo.toml" "Cargo.toml"
+  copy_file "make/rust-makefile" "Makefile"
   copy_file "github/rust-ci.yml" ".github/workflows/ci.yml"
   copy_file "github/rust-build.yml" ".github/workflows/build.yml"
   copy_file "github/zizmor-ci.yml" ".github/workflows/zizmor-ci.yml"
@@ -173,6 +174,7 @@ setup_go() {
 
   # Only when the project has no go.mod yet; an existing file is never touched.
   copy_file "go.mod.template" "go.mod"
+  copy_file "make/go-makefile" "Makefile"
   copy_file "github/go-ci.yml" ".github/workflows/ci.yml"
   copy_file "github/go-build.yml" ".github/workflows/build.yml"
   copy_file "github/zizmor-ci.yml" ".github/workflows/zizmor-ci.yml"
