@@ -224,21 +224,13 @@ linters:
       - legacy
       - std-error-handling
     rules:
-      - linters:
-          - unused
-        path: pkg/supervisor/supervisor_testhelpers.go
-        text: ^func.*supervisor.*(waitSettle|waitSettleError).*$
-        # This file contains hard-coded Sui core contract addresses that are marked as hardcoded credentials.
-      - path: pkg/txverifier/sui_test.go
-        text: 'G101: Potential hardcoded credentials'
+      # Generated files often contain repetitive or unusual text; skip
+      # spelling-related linters for them.
       - linters:
           - dupword
           - misspell
-        path: .*generated_mainnet_tokens\.go$
+        path: .*generated.*\.go$
         text: ".*" # This matches any text in the file
-      - linters:
-          - godox
-        path: node/hack/
       # Ignore test files for these tools.
       - linters:
           - contextcheck
