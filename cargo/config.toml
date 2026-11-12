@@ -1,0 +1,12 @@
+# Dependency cooldown: the resolver skips versions published more recently
+# than this, reducing exposure to freshly published malicious packages.
+# Malicious releases are often caught within days; this waits out that window.
+#
+# Notes:
+# - Requires Rust 1.100+.
+# - Versions without a publish timestamp in the registry index are never held back.
+# - `cargo install` ignores this setting; pin versions explicitly there.
+# - Override for a single urgent update:
+#   CARGO_RESOLVER_INCOMPATIBLE_PUBLISH_AGE=allow cargo update <crate> --precise <version>
+[registry]
+global-min-publish-age = "3 days"

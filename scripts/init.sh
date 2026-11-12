@@ -158,6 +158,7 @@ setup_rust() {
   echo "Setting up Rust project in $DEST ..."
   cat_append "Cargo.toml" "Cargo.toml"
   copy_file "make/rust-makefile" "Makefile"
+  copy_file "cargo/config.toml" ".cargo/config.toml"
   copy_file "github/rust-ci.yml" ".github/workflows/ci.yml"
   copy_file "github/rust-build.yml" ".github/workflows/build.yml"
   copy_file "github/zizmor-ci.yml" ".github/workflows/zizmor-ci.yml"

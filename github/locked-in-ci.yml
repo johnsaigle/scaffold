@@ -1,0 +1,36 @@
+name: Locked-in
+
+permissions: {}
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+  workflow_dispatch:
+
+jobs:
+  locked-in:
+    runs-on: ubuntu-latest
+    name: Lint package installs
+    permissions:
+      contents: read
+    env:
+      # Check recent releases of asymmetric-research/locked-in and update this pin.
+      LOCKED_IN_COMMIT: 69b7eba80deb2d0285b51d63647c4a1139c1bab3 # v0.4.0
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Setup Rust
+        uses: actions-rust-lang/setup-rust-toolchain@ecabd13d1c56bd1345c230e542e9144811ad706f # v2.0.0
+        with:
+          toolchain: stable
+
+      - name: Install locked-in from pinned source
+        run: cargo install --locked --git https://github.com/asymmetric-research/locked-in --rev "$LOCKED_IN_COMMIT" locked-in
+
+      - name: Run locked-in
+        run: locked-in .
