@@ -106,6 +106,16 @@ cat_append() {
   fi
 }
 
+# Append shared git exclude patterns, but only inside a real git repository.
+# Prevents append_file from creating a bogus .git/ directory in plain projects.
+append_git_exclude() {
+  if [[ ! -d "$DEST/.git" ]]; then
+    echo "  SKIP (not a git repo): .git/info/exclude"
+    return
+  fi
+  append_file "git/exclude" ".git/info/exclude"
+}
+
 # Install a git pre-commit hook. Appends to existing hook if present.
 install_hook() {
   local src="$SCAFFOLD_ROOT/$1"
@@ -152,7 +162,7 @@ setup_rust() {
   copy_file "github/zizmor-ci.yml" ".github/workflows/zizmor-ci.yml"
   copy_file "github/rust-release.yml" ".github/workflows/release.yml"
   install_hook "git/pre-commit-rust"
-  append_file "git/exclude" ".git/info/exclude"
+  append_git_exclude
   echo "Done."
 }
 
@@ -167,7 +177,7 @@ setup_go() {
   copy_file "github/go-build.yml" ".github/workflows/build.yml"
   copy_file "github/zizmor-ci.yml" ".github/workflows/zizmor-ci.yml"
   copy_file "github/go-release.yml" ".github/workflows/release.yml"
-  append_file "git/exclude" ".git/info/exclude"
+  append_git_exclude
   echo "Done."
 }
 
@@ -180,13 +190,14 @@ fi
 PROJECT_TYPE="$1"
 DEST="${2:-.}"
 
-# Resolve destination to absolute path
-DEST="$(realpath "$DEST")"
-
 if [[ ! -d "$DEST" ]]; then
   echo "Error: destination directory does not exist: $DEST"
   exit 1
 fi
+
+# Resolve destination to absolute path. Done after the existence check so a
+# bad path produces a friendly error instead of a raw realpath failure.
+DEST="$(realpath "$DEST")"
 
 echo "Scaffold root: $SCAFFOLD_ROOT"
 echo "Destination:   $DEST"
