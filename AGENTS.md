@@ -10,6 +10,9 @@ This repository provides opinionated scaffolding for Rust and Go projects.
 ├── Cargo.toml               # Rust project template
 ├── .golangci.yml           # Go linter configuration template
 ├── go.mod.template         # Go module template for projects without a go.mod
+├── make/rust-makefile      # Example Makefile for Rust projects
+├── make/go-makefile        # Example Makefile for Go projects
+├── cargo/config.toml        # Cargo dependency cooldown config template
 ├── github/rust-ci.yml      # GitHub Actions CI template for Rust
 ├── github/rust-build.yml   # GitHub Actions build template for Rust
 ├── github/rust-release.yml # GitHub Actions release template for Rust
@@ -17,6 +20,8 @@ This repository provides opinionated scaffolding for Rust and Go projects.
 ├── git/pre-commit-rust     # Pre-commit hook for Rust projects
 └── git/exclude             # Git exclude patterns
 ```
+
+The repository's own CI (`.github/workflows/lint.yml`) runs yamllint over `github/` and `.github/workflows/` (config in `.yamllint.yaml`), actionlint over the workflow templates, and shellcheck over `scripts/init.sh`.
 
 ## Build / Lint / Test Commands
 
@@ -27,6 +32,10 @@ This repo contains bash scripts and config templates only - no build step requir
 ```bash
 # Validate scripts
 shellcheck scripts/init.sh
+
+# Lint workflow templates (same as CI)
+actionlint github/*.yml .github/workflows/*.yml
+yamllint github/ .github/workflows/
 
 # Test init script (dry run)
 bash scripts/init.sh rust /tmp/test-rust
