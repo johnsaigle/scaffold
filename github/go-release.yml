@@ -2,8 +2,8 @@ name: Release
 
 on:
   push:
-    branches: [main]
-    paths: ['go.mod']
+    branches: [ main ]
+    paths: [ 'go.mod' ]
   workflow_dispatch:
 
 jobs:
@@ -68,12 +68,12 @@ jobs:
       - name: Prepare binary
         if: steps.check_tag.outputs.exists == 'false'
         run: |
-          chmod +x dist/$BINARY
-          mv dist/$BINARY dist/$BINARY-linux-x64
+          chmod +x "dist/$BINARY"
+          mv "dist/$BINARY" "dist/$BINARY-linux-x64"
 
       - name: Create Release
         if: steps.check_tag.outputs.exists == 'false'
-        run: gh release create "$TAG" dist/$BINARY-linux-x64 --generate-notes --latest
+        run: gh release create "$TAG" "dist/$BINARY-linux-x64" --generate-notes --latest
         env:
           GH_TOKEN: ${{ github.token }}
           TAG: ${{ steps.version.outputs.tag }}

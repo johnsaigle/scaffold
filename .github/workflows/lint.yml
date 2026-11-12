@@ -1,0 +1,77 @@
+name: Lint templates
+
+permissions: {}
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+  workflow_dispatch:
+
+jobs:
+  yamllint:
+    runs-on: ubuntu-latest
+    name: yamllint
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Setup Python
+        uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
+        with:
+          python-version: '3.13'
+
+      - name: Install yamllint
+        run: pip install yamllint==1.38.0
+
+      - name: Run yamllint
+        run: yamllint github/ .github/workflows/
+
+  actionlint:
+    runs-on: ubuntu-latest
+    name: actionlint
+    permissions:
+      contents: read
+    env:
+      # Check recent releases of rhysd/actionlint and update these pins.
+      ACTIONLINT_VERSION: '1.7.12'
+      ACTIONLINT_SHA256: 8aca8db96f1b94770f1b0d72b6dddcb1ebb8123cb3712530b08cc387b349a3d8
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Install actionlint from pinned source
+        run: |
+          curl -sSfL -o /tmp/actionlint.tar.gz \
+            "https://github.com/rhysd/actionlint/releases/download/v${ACTIONLINT_VERSION}/actionlint_${ACTIONLINT_VERSION}_linux_amd64.tar.gz"
+          echo "${ACTIONLINT_SHA256}  /tmp/actionlint.tar.gz" | sha256sum --check --strict -
+          tar -xzf /tmp/actionlint.tar.gz -C /tmp actionlint
+          mkdir -p "$HOME/.local/bin"
+          mv /tmp/actionlint "$HOME/.local/bin/actionlint"
+
+      # actionlint runs its embedded shellcheck on `run:` steps (shellcheck is
+      # preinstalled on GitHub runners), so this also lints the inline scripts.
+      - name: Run actionlint
+        run: |
+          "$HOME/.local/bin/actionlint" -color github/*.yml .github/workflows/*.yml
+
+  shellcheck:
+    runs-on: ubuntu-latest
+    name: shellcheck
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Run shellcheck
+        run: shellcheck scripts/init.sh

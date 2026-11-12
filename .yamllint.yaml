@@ -1,0 +1,19 @@
+# yamllint configuration for this repository's YAML files.
+# Tuned for GitHub Actions workflow templates.
+extends: default
+
+rules:
+  # Workflow YAML regularly has long lines (pinned SHAs, inline scripts).
+  line-length: disable
+  # GitHub Actions uses `on:` as a key, which YAML 1.1 would parse as boolean.
+  truthy:
+    check-keys: false
+  # Workflow files conventionally omit the leading `---`.
+  document-start: false
+  # Match this repository's existing style: `[ main, master ]`.
+  brackets:
+    min-spaces-inside: 1
+    max-spaces-inside: 1
+  # Inline comments use one space before `#`, e.g. `uses: actions/checkout@SHA # vX.Y.Z`.
+  comments:
+    min-spaces-from-content: 1
