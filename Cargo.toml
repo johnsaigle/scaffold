@@ -18,3 +18,13 @@ pedantic = "warn"
 perf = "warn"
 suspicious = "warn"
 allow_attributes_without_reason = "warn"
+
+# Cargo's own lints (stable since Rust 1.100).
+# https://doc.rust-lang.org/stable/cargo/reference/lints.html
+[lints.cargo]
+# Unused dependencies slow down compilation. The warning only appears when
+# every build target that may use a dependency table is built (plain
+# `cargo check`, not `--bin foo`); dev-dependencies are not checked.
+unused_dependencies = "warn"
+# Entries in [workspace.dependencies] that no member inherits are misleading.
+unused_workspace_dependencies = "warn"
